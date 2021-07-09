@@ -16,9 +16,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic> donhang = [];
+  @override
+  void initState() {
+    _getDonHang();
+    super.initState();
+  }
 
-  Future<bool> getDonHang() async {
+  List<DonHang> donhang = [];
+  Future<bool> _getDonHang() async {
     final url = Uri.parse(
         "https://quantri.mevivu.com/admin/api/danhsachdonhang.php?khachhangid=${widget.user.id}");
 
@@ -26,7 +31,10 @@ class _HomePageState extends State<HomePage> {
 
     if (response.statusCode == 200) {
       final resuft = donHangFromJson(utf8.decode(response.bodyBytes));
-      donhang = resuft.values.toList();
+      setState(() {
+        donhang = resuft.values.toList();
+      });
+
       return true;
     } else {
       return false;
@@ -35,9 +43,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      getDonHang();
-    });
     var fullname = widget.user.name.split(' ');
     String _fullName = fullname[fullname.length - 1];
     return Scaffold(
