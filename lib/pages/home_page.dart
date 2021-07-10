@@ -6,6 +6,7 @@ import 'package:quanlydonhang/model/login_model.dart';
 import 'package:quanlydonhang/pages/info.dart';
 import 'package:http/http.dart' as http;
 import 'package:quanlydonhang/pages/login_page.dart';
+import 'package:quanlydonhang/pages/thongtin_donhang.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -95,12 +96,66 @@ class _HomePageState extends State<HomePage> {
               child: Card(
                 child: InkWell(
                   onTap: () {
-                    print('donhang details');
+                    print('go donhang details ${donhang[index].id}');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => ThongTinDonHang(
+                                  donhang: donhang[index],
+                                  user: widget.user,
+                                )));
                   },
                   child: ListTile(
-                    title: Text(donhang[index].name),
-                    subtitle: Text(donhang[index].date),
-                    trailing: Text('${donhang[index].status}'),
+                    hoverColor: Colors.red,
+                    isThreeLine: true,
+                    leading: Image.asset(
+                      'assets/images/mevivudonhang.png',
+                      height: 45,
+                    ),
+                    title: Text(
+                      '${donhang[index].name}',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Ngày khởi tạo : ${donhang[index].date}'),
+                        Stack(
+                          children: [
+                            Container(
+                              color: Colors.red,
+                            ),
+                            donhang[index].status == 0
+                                ? Text(
+                                    "Đăng xử lý",
+                                    style: TextStyle(
+                                      color: Colors.orange,
+                                    ),
+                                  )
+                                : donhang[index].status == 1
+                                    ? Text(
+                                        "Đã kết thúc dự án",
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                        ),
+                                      )
+                                    : donhang[index].status == 5
+                                        ? Text(
+                                            "Đã kết thúc dự án",
+                                            style: TextStyle(
+                                              color: Colors.green,
+                                            ),
+                                          )
+                                        : donhang[index].status == 4
+                                            ? Text("Đơn nợ xấu")
+                                            : Text(""),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -13,15 +13,15 @@ String donHangToJson(Map<String, DonHang> data) => json.encode(
 class DonHang {
   DonHang({
     required this.id,
-    required this.name,
-    required this.status,
-    required this.date,
+    this.name,
+    this.status,
+    this.date,
   });
 
   int id;
-  String name;
-  int status;
-  String date;
+  String? name;
+  int? status;
+  String? date;
 
   factory DonHang.fromJson(Map<String, dynamic> json) => DonHang(
         id: json["id"],
