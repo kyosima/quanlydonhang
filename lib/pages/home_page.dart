@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                           height: 45,
                         ),
                         title: Text(
-                          '${donhang[index].name}',
+                          '${donhang[index].id} - ${donhang[index].name}',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,

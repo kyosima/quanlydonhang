@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final ILogin _loginService = LoginService();
+  bool onloading = false;
   bool hidePassword = true;
   bool _validateUsername = false;
   bool _validatePassword = false;
@@ -127,7 +128,11 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: 40,
                               child: ElevatedButton(
-                                child: Text('Đăng nhập'),
+                                child: onloading
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : Text('Đăng nhập'),
                                 onPressed: _submit,
                               ),
                             )
@@ -144,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _submit() async {
+    onloading = true;
     setState(() {
       _usernameController.text.isEmpty
           ? _validateUsername = true
@@ -181,6 +187,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text('Đóng!'),
                         onPressed: () {
                           Navigator.of(context).pop();
+                          setState(() {
+                            onloading = false;
+                          });
                         },
                       )
                     ],
@@ -197,6 +206,9 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text('Đóng!'),
                         onPressed: () {
                           Navigator.of(context).pop();
+                          setState(() {
+                            onloading = false;
+                          });
                         },
                       )
                     ],

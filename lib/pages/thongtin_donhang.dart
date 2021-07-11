@@ -7,6 +7,7 @@ import 'package:quanlydonhang/model/login_model.dart';
 import 'package:quanlydonhang/pages/info.dart';
 import 'package:quanlydonhang/pages/login_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:quanlydonhang/pages/yeucau_donhang.dart';
 
 class ThongTinDonHang extends StatefulWidget {
   final DonHang donhang;
@@ -48,7 +49,7 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
             icon: new Icon(Icons.arrow_back),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text('Thông tin đơn hàng'),
+          title: Text('Thông tin đơn hàng ${widget.donhang.id}'),
         ),
         endDrawer: Drawer(
           elevation: 16.0,
@@ -516,6 +517,47 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                                         ),
                                       ],
                                     ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            child: RaisedButton(
+                                          child: Text(
+                                            'Yêu cầu đơn hàng',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          color: Colors.blueGrey,
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_) => YeuCau(
+                                                          id: chitietdonhang[
+                                                              'id'],
+                                                        )));
+                                          },
+                                        )),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: RaisedButton(
+                                          child: Text(
+                                            'Lịch sử thanh toán',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          color: Colors.lightGreen,
+                                          onPressed: () {},
+                                        )),
+                                      ],
+                                    )
                                   ],
                                 ),
                               )),
