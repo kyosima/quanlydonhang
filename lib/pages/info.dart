@@ -22,7 +22,7 @@ class Info extends StatelessWidget {
                 end: Alignment.bottomLeft,
                 colors: [
                   HexColor("#113fa7"),
-                  Colors.blue,
+                  Colors.lightBlueAccent,
                 ],
               )),
             ),
