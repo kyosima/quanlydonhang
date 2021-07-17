@@ -1,13 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:quanlydonhang/model/don_hang.dart';
 import 'package:quanlydonhang/model/login_model.dart';
 import 'package:quanlydonhang/pages/info.dart';
+import 'package:quanlydonhang/pages/lichsu_thanhtoan.dart';
+import 'package:quanlydonhang/pages/lienhe.dart';
 import 'package:quanlydonhang/pages/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:quanlydonhang/pages/yeucau_donhang.dart';
+import 'package:select_form_field/select_form_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ThongTinDonHang extends StatefulWidget {
   final DonHang donhang;
@@ -19,6 +24,37 @@ class ThongTinDonHang extends StatefulWidget {
 }
 
 class _ThongTinDonHangState extends State<ThongTinDonHang> {
+  String valDanhgia = "";
+
+  final _gopy = TextEditingController();
+  final List<Map<String, dynamic>> _items = [
+    {
+      'value': 2,
+      'label': 'Rất hài lòng',
+      'icon': Icon(Icons.sentiment_very_satisfied),
+    },
+    {
+      'value': 1,
+      'label': 'Hài lòng',
+      'icon': Icon(Icons.sentiment_satisfied),
+    },
+    {
+      'value': 0,
+      'label': 'Tốt, ổn',
+      'icon': Icon(Icons.sentiment_neutral),
+    },
+    {
+      'value': -1,
+      'label': 'Tệ',
+      'icon': Icon(Icons.sentiment_dissatisfied),
+    },
+    {
+      'value': -2,
+      'label': 'Rất tệ',
+      'icon': Icon(Icons.sentiment_very_dissatisfied),
+    },
+  ];
+
   Map<String, dynamic> chitietdonhang = {};
 
   Future _getChitietdonhang() async {
@@ -31,7 +67,6 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
       final resuft = jsonDecode(utf8.decode(response.bodyBytes));
 
       chitietdonhang = resuft;
-
       return chitietdonhang;
     } else {
       return null;
@@ -50,6 +85,11 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text('Thông tin đơn hàng ${widget.donhang.id}'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _launchURL,
+          child: const Icon(Icons.chat),
+          backgroundColor: Colors.lightGreen,
         ),
         endDrawer: Drawer(
           elevation: 16.0,
@@ -72,6 +112,17 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                 },
                 title: new Text("Thông tin cá nhân"),
                 leading: new Icon(Icons.person),
+              ),
+              Divider(
+                height: 0.1,
+              ),
+              ListTile(
+                title: new Text("Liên hệ Mevivu"),
+                leading: new Icon(Icons.contact_support),
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => LienHe()));
+                },
               ),
               Divider(
                 height: 0.1,
@@ -472,20 +523,20 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                                         ),
                                         Flexible(
                                           flex: 1,
-                                          child: chitietdonhang['danhgia'] == -2
+                                          child: chitietdonhang['danhgia'] == 2
                                               ? Text("Rất hài lòng")
-                                              : chitietdonhang['danhgia'] == -1
+                                              : chitietdonhang['danhgia'] == 1
                                                   ? Text("Hài lòng")
                                                   : chitietdonhang['danhgia'] ==
                                                           0
                                                       ? Text("Tốt, Ổn")
                                                       : chitietdonhang[
                                                                   'danhgia'] ==
-                                                              1
+                                                              -1
                                                           ? Text("Tệ")
                                                           : chitietdonhang[
                                                                       'danhgia'] ==
-                                                                  2
+                                                                  -2
                                                               ? Text("Rất tệ")
                                                               : Text(
                                                                   "Chưa đánh giá"),
@@ -523,14 +574,18 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                                     Row(
                                       children: [
                                         Expanded(
-                                            child: RaisedButton(
+                                            child: ElevatedButton(
                                           child: Text(
                                             'Yêu cầu đơn hàng',
                                             style: TextStyle(
                                               color: Colors.white,
                                             ),
                                           ),
-                                          color: Colors.blueGrey,
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.red),
+                                          ),
                                           onPressed: () {
                                             Navigator.push(
                                                 context,
@@ -545,7 +600,12 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                                           width: 20,
                                         ),
                                         Expanded(
-                                            child: RaisedButton(
+                                            child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.green),
+                                          ),
                                           child: Text(
                                             'Lịch sử thanh toán',
                                             style: TextStyle(
@@ -553,11 +613,32 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
-                                          color: Colors.lightGreen,
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        LichSuThanhToan(
+                                                            id: chitietdonhang[
+                                                                'id'])));
+                                          },
                                         )),
                                       ],
-                                    )
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                        child: ElevatedButton(
+                                      child: Text(
+                                        'Đánh giá, Góp ý',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onPressed: _danhgia,
+                                    )),
                                   ],
                                 ),
                               )),
@@ -570,5 +651,117 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
                 )),
           ),
         ));
+  }
+
+  void _launchURL() async => await canLaunch("https://m.me/mevivu")
+      ? await launch("https://m.me/mevivu")
+      : throw 'Could not launch ${"https://m.me/mevivu"}';
+
+  void _danhgia() {
+    showModalBottomSheet(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (BuildContext context,
+              StateSetter setModalState /*You can rename this!*/) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                color: Colors.white,
+                height: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Đánh giá và Góp ý',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SelectFormField(
+                      type: SelectFormFieldType.dropdown, // or can be dialog
+                      initialValue: '${chitietdonhang['danhgia']}',
+                      icon: Icon(Icons.star),
+                      labelText: 'Đánh giá',
+                      items: _items,
+                      onChanged: (val) {
+                        setModalState(() {
+                          valDanhgia = val;
+                          print(int.parse(valDanhgia));
+                        });
+                      },
+                      onSaved: (val) {
+                        setModalState(() {
+                          valDanhgia = val!;
+                          print(int.parse(valDanhgia));
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    TextField(
+                      controller: _gopy,
+                      maxLines: 8,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(20.0),
+                        border: new OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: new BorderSide(
+                              color: Colors.teal.withOpacity(0.2)),
+                        ),
+                        hintText: "Góp ý cho chúng tôi!",
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                        ),
+                        child: Text(
+                          'Gửi đánh giá \& Góp ý',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _submit();
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+        });
+  }
+
+  Future _submit() async {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 2),
+        content: Text('Cảm ơn bạn đã đánh giá, góp ý với chúng tôi!'),
+      ),
+    );
+    final apiDanhgia =
+        "https://quantri.mevivu.com/admin/api/luudanhgia.php?danhgia=${int.parse(valDanhgia)}&gopy=${_gopy.text}&id=${chitietdonhang['id']}";
+    return http.get(Uri.parse(apiDanhgia));
   }
 }

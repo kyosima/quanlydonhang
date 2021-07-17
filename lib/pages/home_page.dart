@@ -6,8 +6,10 @@ import 'package:quanlydonhang/model/don_hang.dart';
 import 'package:quanlydonhang/model/login_model.dart';
 import 'package:quanlydonhang/pages/info.dart';
 import 'package:http/http.dart' as http;
+import 'package:quanlydonhang/pages/lienhe.dart';
 import 'package:quanlydonhang/pages/login_page.dart';
 import 'package:quanlydonhang/pages/thongtin_donhang.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -78,6 +80,17 @@ class _HomePageState extends State<HomePage> {
                 height: 0.1,
               ),
               ListTile(
+                title: new Text("Liên hệ Mevivu"),
+                leading: new Icon(Icons.contact_support),
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => LienHe()));
+                },
+              ),
+              Divider(
+                height: 0.1,
+              ),
+              ListTile(
                 title: new Text("Đăng xuất"),
                 leading: new Icon(Icons.logout),
                 onTap: () {
@@ -98,81 +111,93 @@ class _HomePageState extends State<HomePage> {
               Colors.blue,
             ],
           )),
-          child: ListView.builder(
-            itemCount: donhang.length,
-            itemBuilder: (context, index) {
-              return Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 3, bottom: 2),
-                  child: Card(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => ThongTinDonHang(
-                                      donhang: donhang[index],
-                                      user: widget.user,
-                                    )));
-                      },
-                      child: ListTile(
-                        hoverColor: Colors.red,
-                        isThreeLine: true,
-                        leading: Image.asset(
-                          'assets/images/mevivudonhang.png',
-                          height: 45,
-                        ),
-                        title: Text(
-                          '${donhang[index].id} - ${donhang[index].name}',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Ngày khởi tạo : ${donhang[index].date}'),
-                            Stack(
-                              children: [
-                                Container(
-                                  color: Colors.red,
+          child: AnimationLimiter(
+            child: ListView.builder(
+              itemCount: donhang.length,
+              itemBuilder: (BuildContext context, int index) {
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 2000),
+                  child: SlideAnimation(
+                    verticalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, top: 3, bottom: 2),
+                          child: Card(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => ThongTinDonHang(
+                                              donhang: donhang[index],
+                                              user: widget.user,
+                                            )));
+                              },
+                              child: ListTile(
+                                hoverColor: Colors.red,
+                                isThreeLine: true,
+                                leading: Image.asset(
+                                  'assets/images/mevivudonhang.png',
+                                  height: 45,
                                 ),
-                                donhang[index].status == 0
-                                    ? Text(
-                                        "Đang xử lý",
-                                        style: TextStyle(
-                                          color: Colors.orange,
+                                title: Text(
+                                  '${donhang[index].id} - ${donhang[index].name}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        'Ngày khởi tạo : ${donhang[index].date}'),
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          color: Colors.red,
                                         ),
-                                      )
-                                    : donhang[index].status == 1
-                                        ? Text(
-                                            "Đã kết thúc dự án",
-                                            style: TextStyle(
-                                              color: Colors.green,
-                                            ),
-                                          )
-                                        : donhang[index].status == 5
+                                        donhang[index].status == 0
                                             ? Text(
-                                                "Đã kết thúc dự án",
+                                                "Đang xử lý",
                                                 style: TextStyle(
-                                                  color: Colors.green,
+                                                  color: Colors.orange,
                                                 ),
                                               )
-                                            : donhang[index].status == 4
-                                                ? Text("Đơn nợ xấu")
-                                                : Text(""),
-                              ],
-                            )
-                          ],
+                                            : donhang[index].status == 1
+                                                ? Text(
+                                                    "Đã kết thúc dự án",
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                    ),
+                                                  )
+                                                : donhang[index].status == 5
+                                                    ? Text(
+                                                        "Đã kết thúc dự án",
+                                                        style: TextStyle(
+                                                          color: Colors.green,
+                                                        ),
+                                                      )
+                                                    : donhang[index].status == 4
+                                                        ? Text("Đơn nợ xấu")
+                                                        : Text(""),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ));
   }

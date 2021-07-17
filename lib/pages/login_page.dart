@@ -15,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final ILogin _loginService = LoginService();
+  bool activeloggin = true;
   bool onloading = false;
   bool hidePassword = true;
   bool _validateUsername = false;
@@ -76,14 +77,15 @@ class _LoginPageState extends State<LoginPage> {
                               height: 20,
                             ),
                             Center(
-                              child: Text(
-                                "Đăng Nhập",
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                            ),
+                                child: onloading
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                        "Đăng Nhập",
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      )),
                             SizedBox(
                               height: 20,
                             ),
@@ -128,11 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: 40,
                               child: ElevatedButton(
-                                child: onloading
-                                    ? CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text('Đăng nhập'),
+                                child: Text('Đăng nhập'),
                                 onPressed: _submit,
                               ),
                             )
@@ -165,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            duration: Duration(seconds: 3),
+            duration: Duration(seconds: 2),
             content: Text('Đăng nhập thành công'),
           ),
         );
@@ -218,7 +216,45 @@ class _LoginPageState extends State<LoginPage> {
         return null;
       }
     } else {
-      print('NOT OK');
+      if (!Platform.isIOS) {
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                  title: Text('Lỗi đăng nhập'),
+                  content: new Text(
+                      "Tên đăng nhập hoặc mật khẩu không được để trống!"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Đóng!'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          onloading = false;
+                        });
+                      },
+                    )
+                  ],
+                ));
+      } else {
+        showDialog(
+            context: context,
+            builder: (_) => CupertinoAlertDialog(
+                  title: Text('Lỗi đăng nhập'),
+                  content: new Text(
+                      "Tên đăng nhập hoặc mật khẩu không được để trống!"),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Đóng!'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          onloading = false;
+                        });
+                      },
+                    )
+                  ],
+                ));
+      }
     }
   }
 }
