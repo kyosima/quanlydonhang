@@ -36,6 +36,8 @@ dependencies:
   select_form_field: ^2.1.0
   flutter_native_splash: ^1.2.0
   flutter_staggered_animations: ^1.0.0
+  modal_bottom_sheet: ^2.0.0
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

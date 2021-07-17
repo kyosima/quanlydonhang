@@ -659,6 +659,7 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
 
   void _danhgia() {
     showModalBottomSheet(
+        isScrollControlled: true,
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -671,7 +672,7 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
               padding: const EdgeInsets.all(20.0),
               child: Container(
                 color: Colors.white,
-                height: double.infinity,
+                height: 900,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -761,7 +762,7 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
       ),
     );
     final apiDanhgia =
-        "https://quantri.mevivu.com/admin/api/luudanhgia.php?danhgia=${int.parse(valDanhgia)}&gopy=${_gopy.text}&id=${chitietdonhang['id']}";
+        "https://quantri.mevivu.com/admin/api/luudanhgia.php?danhgia=${int.parse(valDanhgia)}&gopy=${_gopy.text.isEmpty ? chitietdonhang['gopy'] : _gopy.text}&id=${chitietdonhang['id']}";
     return http.get(Uri.parse(apiDanhgia));
   }
 }
