@@ -14,12 +14,7 @@ abstract class ILogin {
     if (response.statusCode == 200) {
       final body = json.decode(response.body);
       if (body['status'] == 1) {
-        SharedPreferences storage = await SharedPreferences.getInstance();
         final body = json.decode(response.body);
-        await storage.setString('NAME', body['name']);
-        await storage.setInt('STATUS', body['status']);
-        await storage.setInt('ID', body['id']);
-        await storage.setInt('SDT', body['sdt']);
 
         return UserModel(
             name: body['name'],
@@ -32,7 +27,6 @@ abstract class ILogin {
     }
   }
 
-  @override
   Future<UserModel?> getUser() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final name = storage.getString('NAME');
@@ -44,5 +38,10 @@ abstract class ILogin {
     } else {
       return null;
     }
+  }
+
+  Future<bool> logout() async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    return true;
   }
 }

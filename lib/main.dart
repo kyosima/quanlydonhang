@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:quanlydonhang/model/login_model.dart';
+import 'package:quanlydonhang/pages/AutoLogin.dart';
 import 'package:quanlydonhang/pages/home_page.dart';
+
 import 'package:quanlydonhang/pages/login_page.dart';
 import 'package:quanlydonhang/services/service_login.dart';
 
@@ -30,22 +33,22 @@ class MyApp extends StatelessWidget {
                   strokeWidth: 3.0,
                 ),
               );
-            case ConnectionState.none:
-              return LoginPage();
+
             default:
-              if (snapshot != null) {
+              if (snapshot.hasData) {
                 print(snapshot.data);
-                return LoginPage();
+                return HomePage(
+                    user: UserModel(
+                        name: "Âu Thị Thanh Dân",
+                        status: 1,
+                        id: 5788,
+                        sdt: 346678265));
               } else {
                 return LoginPage();
               }
           }
         },
       ),
-      initialRoute: '/login',
-      routes: {
-        '/login': (_) => LoginPage(),
-      },
     );
   }
 }

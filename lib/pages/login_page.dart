@@ -7,7 +7,6 @@ import 'package:quanlydonhang/api/api_service.dart';
 import 'package:quanlydonhang/model/login_model.dart';
 import 'package:quanlydonhang/pages/home_page.dart';
 import 'package:quanlydonhang/services/service_login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override

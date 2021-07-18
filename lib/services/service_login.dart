@@ -32,6 +32,7 @@ class LoginService extends ILogin {
     }
   }
 
+  @override
   Future<UserModel?> getUser() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     final name = storage.getString('NAME');
@@ -46,6 +47,24 @@ class LoginService extends ILogin {
       return UserModel(name: name, status: status, id: id, sdt: sdt);
     } else {
       return null;
+    }
+  }
+
+  @override
+  Future<bool> logout() async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+    final name = storage.getString('NAME');
+    final status = storage.getInt('STATUS');
+    final id = storage.getInt('ID');
+    final sdt = storage.getInt('SDT');
+    if (name != null && status != null && id != null && sdt != null) {
+      await storage.remove('NAME');
+      await storage.remove('STATUS');
+      await storage.remove('ID');
+      await storage.remove('SDT');
+      return true;
+    } else {
+      return false;
     }
   }
 }

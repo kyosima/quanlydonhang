@@ -10,6 +10,7 @@ import 'package:quanlydonhang/pages/lienhe.dart';
 import 'package:quanlydonhang/pages/login_page.dart';
 import 'package:quanlydonhang/pages/thongtin_donhang.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:quanlydonhang/services/service_login.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -93,10 +94,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: new Text("Đăng xuất"),
                 leading: new Icon(Icons.logout),
-                onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => LoginPage()));
-                },
+                onTap: _logout,
               ),
             ],
           ),
@@ -200,5 +198,22 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ));
+  }
+
+  void _logout() async {
+    final logoutValue = await LoginService().logout();
+    if (logoutValue == true) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text(
+            'error with your token, have to login again',
+          ),
+        ),
+      );
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 }
