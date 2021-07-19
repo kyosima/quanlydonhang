@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:quanlydonhang/model/login_model.dart';
 import 'package:quanlydonhang/pages/home_page.dart';
 
@@ -14,6 +15,10 @@ void main() async {
   var sdt = storage.getInt('SDT');
 
   runApp(MaterialApp(
+    title: "Mevivu ID",
+    theme: ThemeData(
+      primaryColor: HexColor('#1967d2'),
+    ),
     home: name == null
         ? LoginPage()
         : HomePage(
