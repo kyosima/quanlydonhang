@@ -6,7 +6,7 @@ class UserModel {
     required this.sdt,
   });
   final String name;
-  final int status;
-  final int id;
-  final int sdt;
+  final int? status;
+  final int? id;
+  final int? sdt;
 }

@@ -38,6 +38,7 @@ dependencies:
   flutter_staggered_animations: ^1.0.0
   modal_bottom_sheet: ^2.0.0
   shared_preferences:
+  fluttertoast: ^8.0.7
 
 dev_dependencies:
   flutter_test:

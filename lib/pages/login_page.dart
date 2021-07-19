@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:quanlydonhang/api/api_service.dart';
 import 'package:quanlydonhang/model/login_model.dart';
@@ -161,12 +162,14 @@ class _LoginPageState extends State<LoginPage> {
       UserModel? user = await _loginService.login(
           _usernameController.text, _passwordController.text);
       if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds: 2),
-            content: Text('Đăng nhập thành công'),
-          ),
-        );
+        Fluttertoast.showToast(
+            msg: "Bạn đã đăng nhập thành công!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (_) => HomePage(user: user),

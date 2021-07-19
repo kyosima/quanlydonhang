@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:quanlydonhang/model/don_hang.dart';
 import 'package:quanlydonhang/model/login_model.dart';
@@ -11,6 +12,7 @@ import 'package:quanlydonhang/pages/lienhe.dart';
 import 'package:quanlydonhang/pages/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:quanlydonhang/pages/yeucau_donhang.dart';
+import 'package:quanlydonhang/services/service_login.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -130,10 +132,7 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
               ListTile(
                 title: new Text("Đăng xuất"),
                 leading: new Icon(Icons.logout),
-                onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => LoginPage()));
-                },
+                onTap: _logout,
               ),
             ],
           ),
@@ -755,14 +754,33 @@ class _ThongTinDonHangState extends State<ThongTinDonHang> {
 
   Future _submit() async {
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: Duration(seconds: 2),
-        content: Text('Cảm ơn bạn đã đánh giá, góp ý với chúng tôi!'),
-      ),
-    );
+    Fluttertoast.showToast(
+        msg: "Cảm ơn bạn đã gửi đánh giá, góp ý cho chúng tôi!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
     final apiDanhgia =
         "https://quantri.mevivu.com/admin/api/luudanhgia.php?danhgia=${int.parse(valDanhgia)}&gopy=${_gopy.text.isEmpty ? chitietdonhang['gopy'] : _gopy.text}&id=${chitietdonhang['id']}";
     return http.get(Uri.parse(apiDanhgia));
+  }
+
+  void _logout() async {
+    final logoutValue = await LoginService().logout();
+    if (logoutValue == true) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => LoginPage()));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text(
+            'error with your token, have to login again',
+          ),
+        ),
+      );
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 }
