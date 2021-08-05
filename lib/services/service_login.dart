@@ -12,8 +12,10 @@ class LoginService extends ILogin {
     final data = {"username": username, "password": password};
     http.Response response;
     response = await http.post(api, body: data);
+    print(response);
     if (response.statusCode == 200) {
       final body = json.decode(response.body);
+      print(body);
       if (body['status'] == 1) {
         SharedPreferences storage = await SharedPreferences.getInstance();
         final body = json.decode(response.body);
@@ -21,11 +23,16 @@ class LoginService extends ILogin {
         await storage.setInt('STATUS', body['status']);
         await storage.setInt('ID', body['id']);
         await storage.setInt('SDT', body['sdt']);
+        await storage.setString('EMAIL', body['email']);
+        await storage.setString('ADDRESS', body['address']);
         return UserModel(
-            name: body['name'],
-            status: body['status'],
-            id: body['id'],
-            sdt: body['sdt']);
+          name: body['name'],
+          status: body['status'],
+          id: body['id'],
+          sdt: body['sdt'],
+          email: body['email'],
+          address: body['address'],
+        );
       }
     } else {
       return null;

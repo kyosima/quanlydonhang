@@ -13,6 +13,8 @@ void main() async {
   var status = storage.getInt('STATUS');
   var id = storage.getInt('ID');
   var sdt = storage.getInt('SDT');
+  var email = storage.getString('EMAIL');
+  var address = storage.getString('ADDRESS');
 
   runApp(MaterialApp(
     title: "Mevivu ID",
@@ -22,6 +24,12 @@ void main() async {
     home: name == null
         ? LoginPage()
         : HomePage(
-            user: UserModel(name: name, status: status, id: id, sdt: sdt)),
+            user: UserModel(
+                name: name,
+                status: status,
+                id: id,
+                sdt: sdt,
+                email: email,
+                address: address)),
   ));
 }

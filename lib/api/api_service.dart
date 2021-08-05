@@ -14,11 +14,13 @@ abstract class ILogin {
       final body = json.decode(response.body);
       if (body['status'] == 1) {
         final body = json.decode(response.body);
-
+        print(body);
         return UserModel(
             name: body['name'],
             status: body['status'],
             id: body['id'],
+            email: body['email'],
+            address: body['address'],
             sdt: body['sdt']);
       }
     } else {
